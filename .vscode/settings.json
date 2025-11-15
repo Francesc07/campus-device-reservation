@@ -1,0 +1,11 @@
+{
+    "azureFunctions.deploySubpath": "Services/device-reservation",
+    "azureFunctions.postDeployTask": "npm install (functions)",
+    "azureFunctions.projectLanguage": "TypeScript",
+    "azureFunctions.projectRuntime": "~4",
+    "debug.internalConsoleOptions": "neverOpen",
+    "azureFunctions.projectLanguageModel": 4,
+    "azureFunctions.projectSubpath": "Services/device-reservation",
+    "azureFunctions.preDeployTask": "npm prune (functions)",
+    "git.ignoreLimitWarning": true
+}
