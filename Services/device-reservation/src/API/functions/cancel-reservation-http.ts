@@ -1,24 +1,25 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+import { app, HttpRequest, HttpResponseInit } from "@azure/functions";
 import { appServices } from "../../appServices";
 
-export async function cancelReservation(req: HttpRequest, ctx: InvocationContext): Promise<HttpResponseInit> {
+export async function cancelReservationHttp(req: HttpRequest): Promise<HttpResponseInit> {
   try {
     const { reservationId } = await req.json() as { reservationId: string };
-    if (!reservationId) return { status: 400, jsonBody: { error: "reservationId required" } };
 
-    const handler = appServices.cancelReservationHandler;
-    const reservation = await handler.execute(reservationId);
+    if (!reservationId) {
+      return { status: 400, jsonBody: { error: "reservationId required" } };
+    }
 
-    return { status: 200, jsonBody: { success: true, reservation } };
-  } catch (e:any) {
-    ctx.error(e.message);
-    return { status: 500, jsonBody: { error: "Internal Server Error" } };
+    const result = await appServices.cancelReservationHandler.execute(reservationId);
+
+    return { status: 200, jsonBody: result };
+  } catch (err: any) {
+    return { status: 500, jsonBody: { error: err.message } };
   }
 }
 
-app.http("cancel-reservation-http", {
+app.http("cancelReservationHttp", {
   methods: ["POST"],
   route: "reservations/cancel",
   authLevel: "anonymous",
-  handler: cancelReservation
+  handler: cancelReservationHttp,
 });

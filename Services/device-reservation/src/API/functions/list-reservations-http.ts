@@ -1,21 +1,23 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+import { app, HttpRequest, HttpResponseInit } from "@azure/functions";
 import { appServices } from "../../appServices";
 
-export async function listReservations(_req: HttpRequest, ctx: InvocationContext): Promise<HttpResponseInit> {
+export async function listReservationsHttp(req: HttpRequest): Promise<HttpResponseInit> {
   try {
-    const handler = appServices.listReservationsHandler;
-    const reservations = await handler.execute();
+    const filter = {
+      userId: req.query.get("userId") || undefined
+    };
 
-    return { status: 200, jsonBody: reservations };
-  } catch (e:any) {
-    ctx.error(e.message);
-    return { status: 500, jsonBody: { error: "Internal Server Error" } };
+    const result = await appServices.listReservationsHandler.execute(filter);
+
+    return { status: 200, jsonBody: result };
+  } catch (err: any) {
+    return { status: 500, jsonBody: { error: err.message } };
   }
 }
 
-app.http("list-reservations-http", {
+app.http("listReservationsHttp", {
   methods: ["GET"],
   route: "reservations",
   authLevel: "anonymous",
-  handler: listReservations
+  handler: listReservationsHttp,
 });

@@ -1,7 +1,6 @@
 import { CosmosClient } from "@azure/cosmos";
 import { Reservation } from "../../Domain/Entities/Reservation";
-import { IReservationRepository } from "../../Application/Ports/IReservationRepository";
-import { ReservationStatus } from "../../Domain/Enums/ReservationStatus";
+import { IReservationRepository } from "../../Application/Interfaces/IReservationRepository";
 
 export class CosmosReservationRepository implements IReservationRepository {
   private container;
@@ -12,56 +11,47 @@ export class CosmosReservationRepository implements IReservationRepository {
     this.container = db.container("reservations");
   }
 
-  async create(res: Reservation): Promise<void> {
-    await this.container.items.create(res);
+  async create(reservation: Reservation): Promise<Reservation> {
+    const { resource } = await this.container.items.create(reservation);
+    return resource as Reservation;
   }
 
   async findById(id: string): Promise<Reservation | null> {
-    try {
-      const { resource } = await this.container.item(id, id).read();
-      return resource as Reservation;
-    } catch {
-      return null;
-    }
+    const query = {
+      query: "SELECT * FROM c WHERE c.id = @id",
+      parameters: [{ name: "@id", value: id }],
+    };
+
+    const { resources } = await this.container.items.query(query).fetchAll();
+
+    return resources.length ? (resources[0] as Reservation) : null;
   }
 
   async findByUser(userId: string): Promise<Reservation[]> {
-    const query = `SELECT * FROM c WHERE c.userId=@u`;
-    const { resources } = await this.container.items.query({
-      query,
-      parameters: [{ name: "@u", value: userId }],
-    }).fetchAll();
+    const query = {
+      query: "SELECT * FROM c WHERE c.userId = @userId",
+      parameters: [{ name: "@userId", value: userId }],
+    };
+
+    const { resources } = await this.container.items.query(query).fetchAll();
 
     return resources as Reservation[];
   }
 
-  async cancel(id: string): Promise<void> {
-    const item = await this.findById(id);
-    if (!item) return;
-
-    item.status = ReservationStatus.Cancelled;
-    await this.update(item);
-  }
-
-  async list(): Promise<Reservation[]> {
+  async findAll(): Promise<Reservation[]> {
     const { resources } = await this.container.items.readAll().fetchAll();
     return resources as Reservation[];
   }
 
-  async update(res: Reservation): Promise<void> {
-    await this.container.items.upsert(res);
+  async update(reservation: Reservation): Promise<Reservation> {
+    const { resource } = await this.container.items.upsert(reservation);
+    return resource as Reservation;
   }
 
-  async findActiveByDevice(deviceId: string): Promise<Reservation[]> {
-    const query = `
-      SELECT * FROM c 
-      WHERE c.deviceId=@d AND (c.status="Pending" OR c.status="Confirmed")
-    `;
-    const { resources } = await this.container.items.query({
-      query,
-      parameters: [{ name: "@d", value: deviceId }],
-    }).fetchAll();
+  async delete(id: string): Promise<void> {
+    const found = await this.findById(id);
+    if (!found) return;
 
-    return resources as Reservation[];
+    await this.container.item(found.id, found.userId).delete();
   }
 }

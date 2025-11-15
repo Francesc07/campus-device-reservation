@@ -1,16 +1,23 @@
 import { CosmosReservationRepository } from "./Infrastructure/Persistence/CosmosReservationRepository";
-import { ReservationService } from "./Application/ReservationService";
-import { CreateReservationHandler } from "./Application/UseCases/CreateReservationHandler";
-import { CancelReservationHandler } from "./Application/UseCases/CancelReservationHandler";
-import { ListReservationsHandler } from "./Application/UseCases/ListReservationsHandler";
 
-const reservationRepository = new CosmosReservationRepository();
-const reservationService = new ReservationService(reservationRepository);
+import { CreateReservationUseCase } from "./Application/UseCases/CreateReservationUseCase";
+import { CancelReservationUseCase } from "./Application/UseCases/CancelReservationUseCase";
+import { ListReservationsUseCase } from "./Application/UseCases/ListReservationsUseCase";
+
+import { CreateReservationHandler } from "./Application/Handlers/CreateReservationHandler";
+import { CancelReservationHandler } from "./Application/Handlers/CancelReservationHandler";
+import { ListReservationsHandler } from "./Application/Handlers/ListReservationsHandler";
+
+const repository = new CosmosReservationRepository();
 
 export const appServices = {
-  reservationRepository,
-  reservationService,
-  createReservationHandler: new CreateReservationHandler(reservationService),
-  cancelReservationHandler: new CancelReservationHandler(reservationService),
-  listReservationsHandler: new ListReservationsHandler(reservationService)
+  createReservationHandler: new CreateReservationHandler(
+    new CreateReservationUseCase(repository)
+  ),
+  cancelReservationHandler: new CancelReservationHandler(
+    new CancelReservationUseCase(repository)
+  ),
+  listReservationsHandler: new ListReservationsHandler(
+    new ListReservationsUseCase(repository)
+  ),
 };
