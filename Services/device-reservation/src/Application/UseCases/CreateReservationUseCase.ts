@@ -1,12 +1,10 @@
-import { v4 as uuidv4 } from "uuid";
-import { IReservationRepository } from "../Interfaces/IReservationRepository";
-import { Reservation } from "../../Domain/Entities/Reservation";
-import { ReservationStatus } from "../../Domain/Enums/ReservationStatus";
-import { STANDARD_LOAN_DAYS } from "../../Domain/Constants/LoanRules";
-import { CreateReservationDTO } from "../Dtos/CreateReservationDTO";
+import { EventPublisher } from "../../Infrastructure/EventGrid/EventGridPublisher";
 
 export class CreateReservationUseCase {
-  constructor(private readonly repository: IReservationRepository) {}
+  constructor(
+    private readonly repository: IReservationRepository,
+    private readonly publisher: EventPublisher
+  ) {}
 
   async execute(data: CreateReservationDTO): Promise<Reservation> {
     const { userId, deviceId } = data;
@@ -32,6 +30,11 @@ export class CreateReservationUseCase {
       updatedAt: startDate,
     };
 
-    return await this.repository.create(reservation);
+    const saved = await this.repository.create(reservation);
+
+    // 🔥 Emit outbound event
+    await this.publisher.publishReservationEvent("Reservation.Confirmed", saved);
+
+    return saved;
   }
 }

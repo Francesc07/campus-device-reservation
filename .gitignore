@@ -21,10 +21,14 @@ lerna-debug.log*
 
 # Environment variables
 .env
+.env.*
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.dev
+.env.test
+.env.prod
 .secrets
 local.settings.json
 appsettings.json

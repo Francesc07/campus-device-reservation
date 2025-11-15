@@ -1,19 +1,25 @@
-import { IReservationRepository } from "../Interfaces/IReservationRepository";
-import { CancelReservationDTO } from "../Dtos/CancelReservationDTO";
-import { ReservationStatus } from "../../Domain/Enums/ReservationStatus";
+import { EventPublisher } from "../../Infrastructure/EventGrid/EventGridPublisher";
 
 export class CancelReservationUseCase {
-  constructor(private readonly repository: IReservationRepository) {}
+  constructor(
+    private readonly repository: IReservationRepository,
+    private readonly publisher: EventPublisher
+  ) {}
 
   async execute(data: CancelReservationDTO) {
     const { reservationId } = data;
 
-    const found = await this.repository.findById(reservationId);
-    if (!found) throw new Error("Reservation not found");
+    const existing = await this.repository.findById(reservationId);
+    if (!existing) throw new Error("Reservation not found");
 
-    found.status = ReservationStatus.Cancelled;
-    found.updatedAt = new Date().toISOString();
+    existing.status = ReservationStatus.Cancelled;
+    existing.updatedAt = new Date().toISOString();
 
-    return await this.repository.update(found);
+    const updated = await this.repository.update(existing);
+
+    // 🔥 Emit outbound event
+    await this.publisher.publishReservationEvent("Reservation.Cancelled", updated);
+
+    return updated;
   }
 }
