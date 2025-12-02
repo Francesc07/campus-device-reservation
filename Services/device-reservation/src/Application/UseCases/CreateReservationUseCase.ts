@@ -1,4 +1,10 @@
 import { EventPublisher } from "../../Infrastructure/EventGrid/EventGridPublisher";
+import { IReservationRepository } from "../Interfaces/IReservationRepository";
+import { CreateReservationDTO } from "../Dtos/CreateReservationDTO";
+import { Reservation } from "../../Domain/Entities/Reservation";
+import { ReservationStatus } from "../../Domain/Enums/ReservationStatus";
+import { STANDARD_LOAN_DAYS } from "../../Domain/Constants/LoanRules";
+import { randomUUID } from "crypto";
 
 export class CreateReservationUseCase {
   constructor(
@@ -20,7 +26,7 @@ export class CreateReservationUseCase {
     due.setDate(due.getDate() + STANDARD_LOAN_DAYS);
 
     const reservation: Reservation = {
-      id: uuidv4(),
+      id: randomUUID(),
       userId,
       deviceId,
       startDate,

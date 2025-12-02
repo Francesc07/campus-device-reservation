@@ -1,6 +1,6 @@
 import { IReservationRepository } from "../Interfaces/IReservationRepository";
 import { ReservationStatus } from "../../Domain/Enums/ReservationStatus";
-import { EventPublisher } from "../../Infrastructure/EventGrid/EventPublisher";
+import { EventPublisher } from "../../Infrastructure/EventGrid/EventGridPublisher";
 
 export class MarkReservationReturnedUseCase {
   constructor(

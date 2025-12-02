@@ -2,13 +2,13 @@ import { EventGridPublisherClient, AzureKeyCredential } from "@azure/eventgrid";
 import { Reservation } from "../../Domain/Entities/Reservation";
 
 export class EventPublisher {
-  private client: EventGridPublisherClient;
+  private client: EventGridPublisherClient<any>;
 
   constructor() {
     this.client = new EventGridPublisherClient(
-      process.env.EVENTGRID_ENDPOINT!,
+      process.env.EVENTGRID_TOPIC_ENDPOINT!,
       "EventGrid",
-      new AzureKeyCredential(process.env.EVENTGRID_KEY!)
+      new AzureKeyCredential(process.env.EVENTGRID_TOPIC_KEY!)
     );
   }
 

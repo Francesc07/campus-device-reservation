@@ -6,9 +6,9 @@ export class CosmosReservationRepository implements IReservationRepository {
   private container;
 
   constructor() {
-    const client = new CosmosClient(process.env.COSMOS_CONNECTION!);
-    const db = client.database("reservation-db");
-    this.container = db.container("reservations");
+    const client = new CosmosClient(process.env.COSMOS_DB_CONNECTION_STRING!);
+    const db = client.database(process.env.COSMOS_DB_DATABASE_NAME!);
+    this.container = db.container(process.env.COSMOS_DB_CONTAINER_NAME!);
   }
 
   async create(reservation: Reservation): Promise<Reservation> {

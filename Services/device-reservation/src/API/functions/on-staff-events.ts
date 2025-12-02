@@ -3,7 +3,7 @@ import { appServices } from "../../appServices";
 
 export async function staffEventsHttp(req: HttpRequest): Promise<HttpResponseInit> {
   try {
-    const events = await req.json();
+    const events = await req.json() as any[];
 
     for (const evt of events) {
       const { eventType, data } = evt;

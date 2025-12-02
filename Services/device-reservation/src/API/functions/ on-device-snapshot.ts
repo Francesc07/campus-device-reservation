@@ -2,7 +2,7 @@ import { app, HttpRequest, HttpResponseInit } from "@azure/functions";
 
 export async function catalogEventsHttp(req: HttpRequest): Promise<HttpResponseInit> {
   try {
-    const events = await req.json();
+    const events = await req.json() as any[];
 
     for (const event of events) {
       // You can expand these later when Reservation needs device snapshot data

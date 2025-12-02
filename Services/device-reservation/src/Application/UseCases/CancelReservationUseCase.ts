@@ -1,4 +1,7 @@
 import { EventPublisher } from "../../Infrastructure/EventGrid/EventGridPublisher";
+import { IReservationRepository } from "../Interfaces/IReservationRepository";
+import { CancelReservationDTO } from "../Dtos/CancelReservationDTO";
+import { ReservationStatus } from "../../Domain/Enums/ReservationStatus";
 
 export class CancelReservationUseCase {
   constructor(
