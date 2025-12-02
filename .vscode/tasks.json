@@ -9,7 +9,10 @@
       "isBackground": true,
       "dependsOn": "npm watch (functions)",
       "options": {
-        "cwd": "${workspaceFolder}/Services/device-reservation"
+        "cwd": "${workspaceFolder}/Services/device-reservation",
+        "env": {
+          "ASPNETCORE_URLS": "http://localhost:7073"
+        }
       }
     },
     {

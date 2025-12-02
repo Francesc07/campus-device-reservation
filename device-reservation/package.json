@@ -1,0 +1,37 @@
+{
+  "name": "reservation-service",
+  "version": "1.0.0",
+  "main": "dist/functionApp.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "clean": "rimraf dist",
+    "prestart": "npm run clean && npm run build",
+    "start": "func start --typescript ",
+    "seed": "ts-node ./tools/seed.ts",
+    "test": "echo \"No tests yet...\"",
+    "build:azure": "tsc && func extensions install",
+    "prepublish": "npm run build"
+  },
+  "dependencies": {
+    "@azure/cosmos": "^4.6.0",
+    "@azure/eventgrid": "^5.12.0",
+    "@types/axios": "^0.9.36",
+    "@types/uuid": "^10.0.0",
+    "axios": "^1.13.2",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@azure/functions": "^4.9.0",
+    "@types/node": "18.x",
+    "azure-functions-core-tools": "^4.x",
+    "rimraf": "^5.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^4.0.0"
+  },
+  "azureFunctions": {
+    "language": "typescript",
+    "programmingModel": "v4"
+  }
+}
+
