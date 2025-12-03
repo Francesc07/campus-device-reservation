@@ -45,7 +45,7 @@ export async function reservationLoanEvents(
 }
 
 app.http("reservation-event-http", {
-  route: "events/reservation-loan",
+  route: "events/loan",
   methods: ["POST"],
   authLevel: "anonymous",
   handler: reservationLoanEvents,

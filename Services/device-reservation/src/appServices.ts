@@ -33,7 +33,7 @@ const reservationRepo: IReservationRepository =
 
 const eventPublisher: IEventPublisher = new EventGridPublisher(
   environment.eventGrid.confirmEndpoint,
-  process.env.EVENTGRID_CONFIRM_TOPIC_KEY!
+  environment.eventGrid.confirmKey
 );
 
 /* -------------------------------------------------------

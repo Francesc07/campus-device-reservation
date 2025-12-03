@@ -2,16 +2,12 @@
   "name": "reservation-service",
   "version": "1.0.0",
   "main": "dist/functionApp.js",
+
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
     "clean": "rimraf dist",
+    "build": "tsc",
     "prestart": "npm run clean && npm run build",
-    "start": "func start --typescript ",
-    "seed": "ts-node ./tools/seed.ts",
-    "test": "echo \"No tests yet...\"",
-    "build:azure": "tsc && func extensions install",
-    "prepublish": "npm run build"
+    "start": "func start --typescript"
   },
   "dependencies": {
     "@azure/cosmos": "^4.6.0",

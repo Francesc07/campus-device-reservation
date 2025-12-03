@@ -33,14 +33,14 @@ export const environment = {
   cosmos: {
     connectionString: getEnv("COSMOS_DB_CONNECTION_STRING"),
     databaseName: getEnv("COSMOS_DB_DATABASE_NAME"),
-    reservationContainer: getEnv("COSMOS_RESERVATION_CONTAINER")
+    reservationContainer: getEnv("COSMOS_DB_CONTAINER_NAME")
   },
 
   /**
    * Reservation publishes only to Confirmation Service.
    */
   eventGrid: {
-    confirmEndpoint: getEnv("EVENTGRID_CONFIRM_TOPIC_ENDPOINT"),
-    confirmKey: getEnv("EVENTGRID_CONFIRM_TOPIC_KEY")   // ✔ REQUIRED
+    confirmEndpoint: getEnv("EVENTGRID_TOPIC_ENDPOINT"),
+    confirmKey: getEnv("EVENTGRID_TOPIC_KEY")   // ✔ REQUIRED
   }
 };
