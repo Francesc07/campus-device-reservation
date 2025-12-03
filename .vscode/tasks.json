@@ -9,10 +9,7 @@
       "isBackground": true,
       "dependsOn": "npm watch (functions)",
       "options": {
-        "cwd": "${workspaceFolder}/Services/device-reservation",
-        "env": {
-          "ASPNETCORE_URLS": "http://localhost:7073"
-        }
+        "cwd": "${workspaceFolder}/device-reservation"
       }
     },
     {
@@ -22,7 +19,7 @@
       "dependsOn": "npm clean (functions)",
       "problemMatcher": "$tsc",
       "options": {
-        "cwd": "${workspaceFolder}/Services/device-reservation"
+        "cwd": "${workspaceFolder}/device-reservation"
       }
     },
     {
@@ -37,7 +34,7 @@
       },
       "isBackground": true,
       "options": {
-        "cwd": "${workspaceFolder}/Services/device-reservation"
+        "cwd": "${workspaceFolder}/device-reservation"
       }
     },
     {
@@ -45,7 +42,7 @@
       "label": "npm install (functions)",
       "command": "npm install",
       "options": {
-        "cwd": "${workspaceFolder}/Services/device-reservation"
+        "cwd": "${workspaceFolder}/device-reservation"
       }
     },
     {
@@ -55,7 +52,7 @@
       "dependsOn": "npm build (functions)",
       "problemMatcher": [],
       "options": {
-        "cwd": "${workspaceFolder}/Services/device-reservation"
+        "cwd": "${workspaceFolder}/device-reservation"
       }
     },
     {
@@ -64,7 +61,7 @@
       "command": "npm run clean",
       "dependsOn": "npm install (functions)",
       "options": {
-        "cwd": "${workspaceFolder}/Services/device-reservation"
+        "cwd": "${workspaceFolder}/device-reservation"
       }
     }
   ]
