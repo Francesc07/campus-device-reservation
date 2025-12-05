@@ -37,10 +37,11 @@ export const environment = {
   },
 
   /**
-   * Reservation publishes only to Confirmation Service.
+   * Reservation publishes to its own topic.
+   * Other services (Loan, Confirmation) subscribe to this topic.
    */
   eventGrid: {
-    confirmEndpoint: getEnv("EVENTGRID_TOPIC_ENDPOINT"),
-    confirmKey: getEnv("EVENTGRID_TOPIC_KEY")   // ✔ REQUIRED
+    topicEndpoint: getEnv("EVENTGRID_TOPIC_ENDPOINT"),
+    topicKey: getEnv("EVENTGRID_TOPIC_KEY")
   }
 };

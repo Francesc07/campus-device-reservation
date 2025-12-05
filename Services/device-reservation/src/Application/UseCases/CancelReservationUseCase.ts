@@ -9,14 +9,23 @@ export class CancelReservationUseCase {
     private eventPublisher: IEventPublisher
   ) {}
 
-  async execute(reservationId: string, userId: string, reason?: string) {
+  async execute(reservationId: string, userId: string, reason?: string, ctx?: any) {
+    const log = ctx?.log || console.log;
+    
+    log(`🔄 [CancelReservationUseCase] Cancelling reservation: ${reservationId}, reason: ${reason || 'none'}`);
+    
     const reservation = await this.reservationRepo.getById(reservationId);
-    if (!reservation) return;
+    if (!reservation) {
+      log(`⚠️ [CancelReservationUseCase] Reservation not found: ${reservationId}`);
+      return;
+    }
 
     reservation.status = ReservationStatus.Cancelled;
     reservation.updatedAt = new Date().toISOString();
 
+    log(`💾 [CancelReservationUseCase] Updating reservation in database...`);
     await this.reservationRepo.update(reservation);
+    log(`✅ [CancelReservationUseCase] Reservation updated in database`);
 
     const event: ReservationCancelledEvent = {
       eventType: "Reservation.Cancelled",
@@ -27,6 +36,8 @@ export class CancelReservationUseCase {
       timestamp: new Date().toISOString()
     };
 
+    log(`📢 [CancelReservationUseCase] Publishing Reservation.Cancelled event:`, JSON.stringify(event));
     await this.eventPublisher.publish(event);
+    log(`✅ [CancelReservationUseCase] Reservation.Cancelled event published successfully`);
   }
 }

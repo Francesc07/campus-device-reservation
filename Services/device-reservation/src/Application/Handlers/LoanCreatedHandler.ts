@@ -15,6 +15,11 @@ export class LoanCreatedHandler {
   async handle(event: LoanCreatedEvent, ctx: InvocationContext) {
     ctx.log("📩 Processing Loan.Created event", event);
 
+    // The event.data contains the loan object with 'id' field (which is the reservationId)
+    const reservationId = (event as any).reservationId || (event as any).id;
+    
+    ctx.log(`📝 [LoanCreatedHandler] Extracted reservationId: ${reservationId}`);
+
     const startDate = new Date(event.startDate);
     const dueDate = new Date(startDate);
     dueDate.setDate(startDate.getDate() + STANDARD_LOAN_DAYS);
@@ -23,7 +28,7 @@ export class LoanCreatedHandler {
 
     // Construct domain reservation
     const reservation: Reservation = {
-      id: event.reservationId,
+      id: reservationId,
       userId: event.userId,
       deviceId: event.deviceId,
       startDate: startDate.toISOString(),
@@ -33,12 +38,30 @@ export class LoanCreatedHandler {
       updatedAt: now
     };
 
+    ctx.log("🏗️ [LoanCreatedHandler] Creating reservation...", { id: reservation.id, userId: reservation.userId, deviceId: reservation.deviceId });
+    
+    // Check if reservation already exists (idempotent handling)
+    const existingReservation = await this.reservationRepo.getById(reservation.id);
+    if (existingReservation) {
+      ctx.log(`⚠️ [LoanCreatedHandler] Reservation ${reservation.id} already exists - skipping creation (idempotent)`);
+      // Still confirm it in case the previous confirmation failed
+      try {
+        await this.confirmUseCase.execute(existingReservation);
+        ctx.log("✅ [LoanCreatedHandler] Reservation confirmed (idempotent)", existingReservation.id);
+      } catch (error) {
+        ctx.error(`❌ [LoanCreatedHandler] Failed to confirm existing reservation`, error);
+        throw error;
+      }
+      return;
+    }
+    
     // Store reservation
     await this.reservationRepo.create(reservation);
-    ctx.log("Reservation created", reservation);
+    ctx.log("✅ [LoanCreatedHandler] Reservation created in Cosmos DB", reservation);
 
+    ctx.log("🔄 [LoanCreatedHandler] Confirming reservation...");
     await this.confirmUseCase.execute(reservation);
-    ctx.log("Reservation confirmed", reservation.id);
+    ctx.log("✅ [LoanCreatedHandler] Reservation confirmed and event published", reservation.id);
   }
 
 }
