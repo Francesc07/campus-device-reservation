@@ -35,7 +35,8 @@ describe("LoanCancelledHandler", () => {
     expect(mockCancelUseCase.execute).toHaveBeenCalledWith(
       "res-123",
       "user-456",
-      "Device no longer available"
+      "Device no longer available",
+      mockContext
     );
   });
 
@@ -53,7 +54,8 @@ describe("LoanCancelledHandler", () => {
     expect(mockCancelUseCase.execute).toHaveBeenCalledWith(
       "res-123",
       "user-456",
-      undefined
+      undefined,
+      mockContext
     );
   });
 
@@ -69,12 +71,11 @@ describe("LoanCancelledHandler", () => {
     await handler.handle(event, mockContext);
 
     expect(mockContext.log).toHaveBeenCalledWith(
-      "Processing Loan.Cancelled event",
+      "📩 Processing Loan.Cancelled event",
       event
     );
     expect(mockContext.log).toHaveBeenCalledWith(
-      "Reservation cancelled",
-      "res-123"
+      "✅ Reservation cancelled successfully: res-123"
     );
   });
 });

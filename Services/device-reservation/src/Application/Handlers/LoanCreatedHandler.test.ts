@@ -116,12 +116,11 @@ describe("LoanCreatedHandler", () => {
       event
     );
     expect(mockContext.log).toHaveBeenCalledWith(
-      "Reservation created",
-      expect.anything()
+      "📝 [LoanCreatedHandler] Extracted reservationId: res-123"
     );
     expect(mockContext.log).toHaveBeenCalledWith(
-      "Reservation confirmed",
-      "res-123"
+      "🏗️ [LoanCreatedHandler] Creating reservation...",
+      expect.anything()
     );
   });
 });

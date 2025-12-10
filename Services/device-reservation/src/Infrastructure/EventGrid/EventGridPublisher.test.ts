@@ -29,7 +29,7 @@ describe("EventGridPublisher", () => {
     expect(publisher).toBeDefined();
   });
 
-  it("should publish event with correct CloudEvent format", async () => {
+  it("should publish event with correct EventGrid schema format", async () => {
     const event = {
       eventType: "Reservation.Confirmed",
       data: {
@@ -44,9 +44,10 @@ describe("EventGridPublisher", () => {
     expect(mockSend).toHaveBeenCalledWith([
       expect.objectContaining({
         id: expect.any(String),
-        type: "Reservation.Confirmed",
-        source: "reservation-service",
-        time: expect.any(String),
+        eventType: "Reservation.Confirmed",
+        subject: "reservation/event",
+        eventTime: expect.any(Date),
+        dataVersion: "1.0",
         data: {
           reservationId: "res-123",
           deviceId: "device-456",
@@ -69,8 +70,9 @@ describe("EventGridPublisher", () => {
 
     expect(mockSend).toHaveBeenCalledWith([
       expect.objectContaining({
-        type: "Reservation.Cancelled",
-        source: "reservation-service",
+        eventType: "Reservation.Cancelled",
+        subject: "reservation/event",
+        dataVersion: "1.0",
         data: cancelEvent.data,
       }),
     ]);
