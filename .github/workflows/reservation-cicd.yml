@@ -25,10 +25,6 @@ env:
   NODE_VERSION: '22.x'
   SERVICE_PATH: './Services/device-reservation'
 
-permissions:
-  id-token: write
-  contents: read
-
 # ======================================================
 # 🧪 TEST JOB
 # ======================================================
@@ -154,10 +150,7 @@ jobs:
       - name: 🔐 Azure Login
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: false
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: 📦 Install Azure Functions Core Tools
         run: |
@@ -201,10 +194,7 @@ jobs:
       - name: 🔐 Azure Login
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: false
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: 📦 Install Azure Functions Core Tools
         run: |
@@ -246,10 +236,7 @@ jobs:
       - name: 🔐 Azure Login
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: false
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: 📦 Install Azure Functions Core Tools
         run: |
