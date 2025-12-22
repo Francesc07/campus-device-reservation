@@ -19,11 +19,14 @@ export class ConfirmReservationUseCase {
     await this.reservationRepo.update(reservation);
     console.log(`✅ Reservation updated in database`);
 
-    // Publish reservation event
+    // Publish reservation event with metadata
     const eventData = {
       reservationId: reservation.id,
       deviceId: reservation.deviceId,
       userId: reservation.userId,
+      deviceBrand: reservation.deviceBrand,
+      deviceModel: reservation.deviceModel,
+      userEmail: reservation.userEmail,
       startDate: reservation.startDate,
       dueDate: reservation.dueDate,
     };

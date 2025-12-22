@@ -4,6 +4,11 @@ export interface LoanCancelledEvent {
   userId: string;
   deviceId: string;
 
+  // Metadata from Loan Service
+  deviceBrand?: string;
+  deviceModel?: string;
+  userEmail?: string;
+
   reason?: string;
   timestamp: string;
 }

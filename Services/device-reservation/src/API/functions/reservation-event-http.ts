@@ -24,20 +24,26 @@ export async function reservationLoanEvents(
     const eventType = evt.eventType || evt.type; 
     const eventData = evt.data;
 
-    switch (eventType) {
+    try {
+      switch (eventType) {
 
-      case "Loan.Created":
-        ctx.log("🟢 Loan.Created event received", eventData);
-        await appServices.loanCreatedHandler.handle(eventData, ctx);
-        break;
+        case "Loan.Created":
+          ctx.log("🟢 Loan.Created event received", eventData);
+          await appServices.loanCreatedHandler.handle(eventData, ctx);
+          break;
 
-      case "Loan.Cancelled":
-        ctx.log("🟠 Loan.Cancelled event received", eventData);
-        await appServices.loanCancelledHandler.handle(eventData, ctx);
-        break;
+        case "Loan.Cancelled":
+          ctx.log("🟠 Loan.Cancelled event received", eventData);
+          await appServices.loanCancelledHandler.handle(eventData, ctx);
+          break;
 
-      default:
-        ctx.log(`Ignoring unsupported event type: ${eventType}`);
+        default:
+          ctx.log(`Ignoring unsupported event type: ${eventType}`);
+      }
+    } catch (error) {
+      ctx.error(`❌ Error processing ${eventType} event:`, error);
+      ctx.error(`Event data:`, eventData);
+      throw error; // Re-throw to trigger retry
     }
   }
 

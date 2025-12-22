@@ -4,6 +4,11 @@ export interface LoanCreatedEvent {
   userId: string;
   deviceId: string;
 
+  // Metadata from Loan Service
+  deviceBrand?: string;       // Device brand (e.g., "Apple")
+  deviceModel?: string;       // Device model (e.g., "MacBook Pro")
+  userEmail?: string;         // User's email address
+
   startDate: string;          // Default: now
   dueDate: string;            // +2 days (loan duration)
 

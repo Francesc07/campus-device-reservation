@@ -5,17 +5,20 @@ import { CancelReservationUseCase } from "../UseCases/CancelReservationUseCase";
 export class LoanCancelledHandler {
   constructor(private cancelUseCase: CancelReservationUseCase) {}
 
-  async handle(event: LoanCancelledEvent, ctx: InvocationContext) {
+  async handle(event: any, ctx: InvocationContext) {
+    // Handle both reservationId (new) and id (legacy) fields
+    const reservationId = event.reservationId || event.id;
+    
     ctx.log("📩 Processing Loan.Cancelled event", event);
-    ctx.log(`📝 Event details - reservationId: ${event.reservationId}, userId: ${event.userId}, reason: ${event.reason || 'none'}`);
+    ctx.log(`📝 Event details - reservationId: ${reservationId}, userId: ${event.userId}, reason: ${event.reason || 'none'}`);
 
     await this.cancelUseCase.execute(
-      event.reservationId,
+      reservationId,
       event.userId,
       event.reason,
       ctx
     );
 
-    ctx.log(`✅ Reservation cancelled successfully: ${event.reservationId}`);
+    ctx.log(`✅ Reservation cancelled successfully: ${reservationId}`);
   }
 }

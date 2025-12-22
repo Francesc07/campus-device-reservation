@@ -10,7 +10,13 @@ export class CancelReservationUseCase {
   ) {}
 
   async execute(reservationId: string, userId: string, reason?: string, ctx?: any) {
-    const log = ctx?.log || console.log;
+    const log = (msg: string, ...args: any[]) => {
+      if (ctx?.log) {
+        ctx.log(msg, ...args);
+      } else {
+        console.log(msg, ...args);
+      }
+    };
     
     log(`🔄 [CancelReservationUseCase] Cancelling reservation: ${reservationId}, reason: ${reason || 'none'}`);
     
@@ -32,6 +38,9 @@ export class CancelReservationUseCase {
       reservationId,
       userId,
       deviceId: reservation.deviceId,
+      deviceBrand: reservation.deviceBrand,
+      deviceModel: reservation.deviceModel,
+      userEmail: reservation.userEmail,
       reason,
       timestamp: new Date().toISOString()
     };

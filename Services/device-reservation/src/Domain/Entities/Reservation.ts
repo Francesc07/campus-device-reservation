@@ -5,6 +5,11 @@ export interface Reservation {
   userId: string;
   deviceId: string;
 
+  // Metadata from Loan Service
+  deviceBrand?: string;   // e.g., "Apple", "Dell"
+  deviceModel?: string;   // e.g., "MacBook Pro", "XPS 15"
+  userEmail?: string;     // User's email address
+
   startDate: string;     // When the reservation begins
   dueDate: string;       // Expected return (handled by business rules)
 

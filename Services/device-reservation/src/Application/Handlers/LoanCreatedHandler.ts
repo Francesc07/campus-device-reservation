@@ -26,11 +26,14 @@ export class LoanCreatedHandler {
 
     const now = new Date().toISOString();
 
-    // Construct domain reservation
+    // Construct domain reservation with metadata
     const reservation: Reservation = {
       id: reservationId,
       userId: event.userId,
       deviceId: event.deviceId,
+      deviceBrand: event.deviceBrand,
+      deviceModel: event.deviceModel,
+      userEmail: event.userEmail,
       startDate: startDate.toISOString(),
       dueDate: dueDate.toISOString(),
       status: ReservationStatus.Pending,

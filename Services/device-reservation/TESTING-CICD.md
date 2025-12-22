@@ -4,6 +4,20 @@
 
 This document describes the comprehensive testing strategy, CI/CD pipeline, observability, and scalability features of the Device Reservation Service.
 
+> **💡 For architectural decisions, trade-offs, and detailed impact analysis, see [ARCHITECTURE-DECISIONS.md](./ARCHITECTURE-DECISIONS.md)**
+
+### Document Purpose
+- **What**: Comprehensive documentation of testing, CI/CD, and operational features
+- **How**: Commands, configurations, and usage instructions
+- **Why**: See ARCHITECTURE-DECISIONS.md for rationale and trade-offs
+
+### Key Highlights
+- ✅ 36 passing tests (unit, idempotency, concurrency, integration)
+- ✅ Full CI/CD pipeline with GitHub Actions (4 stages)
+- ✅ Infrastructure as Code with Bicep (2 templates)
+- ✅ Complete observability (logs, metrics, alerts, dashboards)
+- ✅ Load testing and auto-scaling capability
+
 ## 🧪 Testing Strategy
 
 ### Test Coverage Summary
@@ -502,10 +516,47 @@ func azure functionapp publish devicereservation-dev-ab07-func --nozip
 - App Insights: [Your App Insights]
 - Logs: Azure Monitor / Log Analytics
 
-## 📚 Additional Resources
+## 🔗 Related Documentation
+
+### Internal Documents
+- **[ARCHITECTURE-DECISIONS.md](./ARCHITECTURE-DECISIONS.md)**: Deep dive into technical decisions, trade-offs, and impact analysis
+- **[IMPLEMENTATION-SUMMARY.md](./IMPLEMENTATION-SUMMARY.md)**: Requirements checklist and verification
+
+### What Each Document Covers
+
+| Document | Purpose | Content |
+|----------|---------|---------|
+| **ARCHITECTURE-DECISIONS.md** | WHY and trade-offs | Technical decisions, alternatives, security/scalability/resilience/maintainability/cost analysis, lessons learned |
+| **TESTING-CICD.md** (this doc) | WHAT and HOW | Testing strategy, CI/CD pipeline, observability features, commands, configurations |
+| **IMPLEMENTATION-SUMMARY.md** | Checklist | Requirements verification, evidence of completion |
+
+### Questions This Document Answers
+- ✅ How do I run tests?
+- ✅ What tests exist?
+- ✅ How does the CI/CD pipeline work?
+- ✅ How do I deploy infrastructure?
+- ✅ How do I run load tests?
+- ✅ What observability features are available?
+
+### Questions ARCHITECTURE-DECISIONS.md Answers
+- ✅ Why did we choose Jest?
+- ✅ Why Event Grid instead of Service Bus?
+- ✅ Why Consumption Plan vs Premium?
+- ✅ What are the cost implications?
+- ✅ What security trade-offs did we make?
+- ✅ How does this scale?
+- ✅ What are the known limitations?
+
+## 📚 External Resources
 
 - [Azure Functions Best Practices](https://docs.microsoft.com/azure/azure-functions/functions-best-practices)
 - [Cosmos DB Best Practices](https://docs.microsoft.com/azure/cosmos-db/best-practices)
 - [Event Grid Best Practices](https://docs.microsoft.com/azure/event-grid/best-practices)
 - [GitHub Actions Documentation](https://docs.github.com/actions)
 - [Azure Bicep Documentation](https://docs.microsoft.com/azure/azure-resource-manager/bicep/)
+
+---
+
+**Document Version**: 1.1  
+**Last Updated**: December 10, 2025  
+**Companion Documents**: ARCHITECTURE-DECISIONS.md, IMPLEMENTATION-SUMMARY.md
