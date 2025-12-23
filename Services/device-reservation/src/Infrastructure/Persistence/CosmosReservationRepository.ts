@@ -2,9 +2,45 @@ import { IReservationRepository } from "../../Application/Interfaces/IReservatio
 import { Reservation } from "../../Domain/Entities/Reservation";
 import { CosmosClientFactory } from "../Config/CosmosClientFactory";
 
+/**
+ * CosmosReservationRepository
+ * 
+ * Implements IReservationRepository using Azure Cosmos DB SQL API.
+ * Provides persistence operations for device reservations.
+ * 
+ * **Features:**
+ * - Uses singleton Cosmos client for connection pooling
+ * - Handles Cosmos DB metadata cleanup on updates
+ * - Provides detailed logging for observability
+ * - Implements standard repository pattern
+ * 
+ * **Cosmos DB Design:**
+ * - Database: DeviceReservationDB
+ * - Container: Reservations
+ * - Partition Key: /id (reservation ID)
+ * - Consistency: Session (default)
+ * 
+ * **Error Handling:**
+ * - All errors are logged and re-thrown
+ * - Cosmos DB errors include status codes and details
+ * - Transactional consistency at document level
+ * 
+ * @example
+ * ```typescript
+ * const repo = new CosmosReservationRepository();
+ * await repo.create(reservation);
+ * const found = await repo.getById(reservation.id);
+ * ```
+ */
 export class CosmosReservationRepository implements IReservationRepository {
   private container = CosmosClientFactory.getReservationContainer();
 
+  /**
+   * Creates a new reservation in Cosmos DB
+   * 
+   * @param reservation - The reservation to create
+   * @throws {Error} If creation fails (duplicate ID, network error, etc.)
+   */
   async create(reservation: Reservation): Promise<void> {
     console.log(`💾 Creating reservation in Cosmos DB: ${reservation.id}`);
     try {
@@ -16,10 +52,19 @@ export class CosmosReservationRepository implements IReservationRepository {
     }
   }
 
+  /**
+   * Updates an existing reservation in Cosmos DB
+   * 
+   * Note: Uses upsert to handle race conditions gracefully.
+   * Cleans up Cosmos DB internal metadata fields before updating.
+   * 
+   * @param reservation - The reservation to update
+   * @throws {Error} If update fails
+   */
   async update(reservation: Reservation): Promise<void> {
     console.log(`💾 Updating reservation in Cosmos DB: ${reservation.id}`);
     try {
-      // Clean up Cosmos DB metadata fields before upserting
+      // Remove Cosmos DB internal metadata fields
       const cleanReservation = { ...reservation };
       delete (cleanReservation as any)._rid;
       delete (cleanReservation as any)._self;
